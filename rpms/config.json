@@ -1,7 +1,7 @@
 {
     "include": [
   {
-    "base_image": "ubi:8",
+    "base_image": "redhat/ubi8:latest",
     "target_arch": "x86_64",
     "nexus_classifier": "rhel8"
   },
