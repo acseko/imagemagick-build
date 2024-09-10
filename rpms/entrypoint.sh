@@ -36,6 +36,9 @@ sed -i '/BuildRequires.*ghostscript-devel/d; s/--with-gslib/--without-gslib/' Im
 # Drop LibRaw support which is not compatible with the current version of ImageMagick
 sed -i '/BuildRequires.*LibRaw/d; /--with-raw/d' ImageMagick.spec.in
 
+# Drop urw-base35-fonts support, which has AGPL license.
+sed -i '/BuildRequires.*urw-base35-fonts-devel/d; /--with-urw-base35-font-dir=.*$/d' ImageMagick.spec.in
+
 AFTER_CHECKOUT_HOOK_SCRIPT="../after-checkout-${BASE_IMAGE//:/}-$IMAGEMAGICK_VERSION.sh"
 if [ -x "$AFTER_CHECKOUT_HOOK_SCRIPT" ]; then
     "$AFTER_CHECKOUT_HOOK_SCRIPT"
