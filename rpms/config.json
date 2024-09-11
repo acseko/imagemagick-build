@@ -1,11 +1,6 @@
 {
     "include": [
   {
-    "base_image": "redhat/ubi8:latest",
-    "target_arch": "x86_64",
-    "nexus_classifier": "rhel8"
-  },
-  {
     "base_image": "rockylinux:9",
     "target_arch": "x86_64",
     "nexus_classifier": "el9"
