@@ -60,5 +60,6 @@ cd "/root/rpmbuild/RPMS/$TARGET_ARCH"
 
 echo "Testing package for unexpected dependencies"
 rpm -qp --requires ImageMagick-libs-$IMAGEMAGICK_VERSION.$TARGET_ARCH.rpm | grep -qEv 'libgs'
+rpm -qp --requires ImageMagick-libs-$IMAGEMAGICK_VERSION.$TARGET_ARCH.rpm | grep -qEv 'urw-bas35'
 
 exec /tests.sh $IMAGEMAGICK_VERSION $TARGET_ARCH
