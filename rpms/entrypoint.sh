@@ -41,6 +41,7 @@ sed -i '/BuildRequires.*urw-base35-fonts-devel/d; /--with-urw-base35-font-dir=.*
 
 #libheif is not available on el8.
 sed -i 's/%if %{with libheif}/%if %{with libheif} && 0%{?rhel} > 8/g' ImageMagick.spec.in
+grep -A5 -B 5 libheif ImageMagick.spec.in
 
 AFTER_CHECKOUT_HOOK_SCRIPT="../after-checkout-${BASE_IMAGE//:/}-$IMAGEMAGICK_VERSION.sh"
 if [ -x "$AFTER_CHECKOUT_HOOK_SCRIPT" ]; then
