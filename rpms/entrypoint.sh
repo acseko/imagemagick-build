@@ -40,7 +40,7 @@ sed -i '/BuildRequires.*LibRaw/d; /--with-raw/d' ImageMagick.spec.in
 sed -i '/BuildRequires.*urw-base35-fonts-devel/d; /--with-urw-base35-font-dir=.*$/d' ImageMagick.spec.in
 
 #libheif is not available on el8.
-sed -i 's/%if %{with libheif}/%if (%{with libheif}) && (0%{?rhel} > 8)/' ImageMagick.spec.in
+sed -i 's/%if %{with libheif}/%if (%{with libheif}) && (0%{?rhel} > 8)/g' ImageMagick.spec.in
 
 AFTER_CHECKOUT_HOOK_SCRIPT="../after-checkout-${BASE_IMAGE//:/}-$IMAGEMAGICK_VERSION.sh"
 if [ -x "$AFTER_CHECKOUT_HOOK_SCRIPT" ]; then
