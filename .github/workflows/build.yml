@@ -46,7 +46,7 @@ jobs:
           echo "imagemagick_release=$(cat ./release-version)" >> $GITHUB_OUTPUT
 
       - name: Prepare image
-        run: docker build . -t buildenv --build-arg BASE_IMAGE=${{ matrix.base_image }}
+        run: docker build . -t buildenv --build-arg BASE_IMAGE=${{ matrix.base_image }} --build-arg NOAGPL=true
         working-directory: rpms
 
       - name: Build and Install

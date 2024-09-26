@@ -36,18 +36,33 @@ sed -i '/BuildRequires.*ghostscript-devel/d; s/--with-gslib/--without-gslib/' Im
 # Drop LibRaw support which is not compatible with the current version of ImageMagick
 sed -i '/BuildRequires.*LibRaw/d; /--with-raw/d' ImageMagick.spec.in
 
+if [ "${NOAGPL:-false}" = "true" ]; then
+  # Drop urw-base35-fonts support, which has AGPL license.
+  sed -i '/BuildRequires.*urw-base35-fonts/d; /--with-urw-base35-fonts/d; /urw-base35-fonts/d' ImageMagick.spec.in
+  # Drop graphviz, since it requires urw-base35-fonts
+  sed -i '/BuildRequires.*graphviz/d' ImageMagick.spec.in
+fi;
+
 AFTER_CHECKOUT_HOOK_SCRIPT="../after-checkout-${BASE_IMAGE//:/}-$IMAGEMAGICK_VERSION.sh"
 if [ -x "$AFTER_CHECKOUT_HOOK_SCRIPT" ]; then
     "$AFTER_CHECKOUT_HOOK_SCRIPT"
 fi
 
 # Generate updated src.rpm
-./configure
+if [ "${NOAGPL:-false}" = "true" ]; then
+  ./configure --with-gvc=no
+else
+  ./configure
+fi
 make dist-xz
 make srpm
 
 # Build it
-yum-builddep -y "ImageMagick-$IMAGEMAGICK_VERSION.src.rpm"
+if [ "${NOAGPL:-false}" = "true" ]; then
+  yum-builddep -y "ImageMagick-$IMAGEMAGICK_VERSION.src.rpm" --exclude urw-base35-fonts --exclude graphviz
+else
+  yum-builddep -y "ImageMagick-$IMAGEMAGICK_VERSION.src.rpm"
+fi
 rpmbuild --rebuild --nocheck --target "$TARGET_ARCH" "ImageMagick-$IMAGEMAGICK_VERSION.src.rpm"
 
 echo "Imagemagick $IMAGEMAGICK_VERSION for $TARGET_ARCH built successfully."
@@ -57,5 +72,10 @@ cd "/root/rpmbuild/RPMS/$TARGET_ARCH"
 
 echo "Testing package for unexpected dependencies"
 rpm -qp --requires ImageMagick-libs-$IMAGEMAGICK_VERSION.$TARGET_ARCH.rpm | grep -qEv 'libgs'
+
+if [ "${NOAGPL:-false}" = "true" ]; then
+  rpm -qp --requires ImageMagick-libs-$IMAGEMAGICK_VERSION.$TARGET_ARCH.rpm | grep -qEv 'urw-base35-fonts'
+  rpm -qp --requires ImageMagick-libs-$IMAGEMAGICK_VERSION.$TARGET_ARCH.rpm | grep -qEv 'graphviz'
+fi;
 
 exec /tests.sh $IMAGEMAGICK_VERSION $TARGET_ARCH
