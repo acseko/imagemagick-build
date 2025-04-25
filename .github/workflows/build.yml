@@ -26,7 +26,7 @@ jobs:
 
   build_rpms:
     name: Build ${{ matrix.base_image }} ${{ matrix.target_arch }}
-    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-latest-arm64-small' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     needs:
       - configure
     strategy:
@@ -64,7 +64,7 @@ jobs:
 
   test_rpms:
     name: Test ${{ matrix.base_image }} ${{ matrix.target_arch }}
-    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-latest-arm64-small' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     needs:
       - configure
       - build_rpms
@@ -129,7 +129,7 @@ jobs:
         run: ls -R *.rpm
 
       - name: Deploy to nexus
-        uses: Alfresco/alfresco-build-tools/.github/actions/maven-deploy-file@16272633584df58ea603112c4aac4564c8673cd6
+        uses: Alfresco/alfresco-build-tools/.github/actions/maven-deploy-file@45bb8b664779b691f8a21d9fd49e360916726c11
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           group-id: org.imagemagick
@@ -147,7 +147,7 @@ jobs:
 
   build_deb:
     name: Build ${{ matrix.base_image }} ${{ matrix.target_arch }}
-    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-latest-arm64-small' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     needs:
       - configure
     strategy:
@@ -186,7 +186,7 @@ jobs:
 
   test_deb:
     name: Test ${{ matrix.base_image }} ${{ matrix.target_arch }}
-    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-latest-arm64-small' || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.target_arch == 'aarch64' && 'ubuntu-24.04-arm' || 'ubuntu-latest' }}
     needs:
       - configure
       - build_deb
@@ -257,7 +257,7 @@ jobs:
         run: ls -R *.deb
 
       - name: Deploy to nexus
-        uses: Alfresco/alfresco-build-tools/.github/actions/maven-deploy-file@16272633584df58ea603112c4aac4564c8673cd6
+        uses: Alfresco/alfresco-build-tools/.github/actions/maven-deploy-file@45bb8b664779b691f8a21d9fd49e360916726c11
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           group-id: org.imagemagick
